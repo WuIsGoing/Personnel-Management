@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <style type="text/css">
+        @import "css/bootstrap.css";
+    </style>
+    <script src="js/jquery-1.9.1.js"></script>
+    <!--正则验证-->
+    <script src="js/MyJS.js"></script>
+    <script>
+        $(function () {
+
+            //AjAX——显示菜单
+            $.post("/showMenu",function (data) {
+                //data返回null的时候,跳转到登录页面
+                //data只会根据控制器的方法返回值来确定参数，不会根据具体的返回值，所以不能用data==null，因为控制器返回的是List
+                if(data.length==0){
+                    $(location).attr("href","/index");
+                }else {
+                    var result="";
+                    var menu=$("#menu");
+                    for(var i=0;i<data.length;i++){
+                        //处理每个菜单选项
+                        result+="<li id=action"+data[i].id+">"+data[i].action+"</li>";
+                    }
+                    menu.append(result);
+                    //为菜单各个选项赋予功能，根据data[i].id来进行判断
+                    menu.children().each(function(){
+                        var mainContent=$("#mainContent");
+                        $(this).on("click",function () {
+                            switch ($(this).attr("id")) {
+                                case "action1":mainContent.load("pwdChangePage");break;//修改密码，两个问题，AJax如何跳转Ajax
+                                case "action2":mainContent.load("/html/departManage.html");break;
+                                case "action3":mainContent.load("/html/empManage.html");break;
+                                case "action4":$(location).attr("href","Menu/AttendCheck");break;
+                                case "action5":$(location).attr("href","Menu/SalaryManage");break;
+                                case "action6":mainContent.load("/html/absenceManage.html");break;
+                                case "action7":mainContent.load("/html/showAbsence.html");break;
+                                case "action8":$(location).attr("href","Menu/pwdChange");break;
+                                default:break;
+                            }
+                        });
+                    });
+                }
+            });
+
+        })
+    </script>
+</head>
+<body>
+<h2>管理菜单</h2>
+<hr/>
+<h4>菜单管理</h4>
+<ul id="menu"></ul>
+<div style="height:400px;width: 600px;background-color: antiquewhite;" id="mainContent"></div>
+</body>
+</html>

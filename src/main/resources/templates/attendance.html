@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>出勤管理</title>
+    <script>
+        $(function () {
+            $(".changeAttendance").on("click",function () {//更改工资
+                var days=prompt("要更改的天数为：");
+                if(days%1===0){//判断整数
+                    $("#mainContent").load($(this).attr("href")+"&days="+days);
+                }else {
+                    alert("请输入正确的数字！")
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+<h3>出勤管理</h3><hr/>
+<table  class="table table-striped table-bordered">
+    <tr>
+        <th>月份</th><th>出勤天数</th><th>员工</th><th>操作</th>
+    </tr>
+    <tr th:each="attendance:${attendances}">
+        <td th:text="${attendance.time}"></td>
+        <td th:text="${attendance.days}"></td>
+        <td th:text="${attendance.ename}"></td>
+        <td><button class="changeAttendance btn btn-primary" th:href="@{changeAttendance(eid=${attendance.eid})}">修改</button></td>
+    </tr>
+</table>
+</body>
+</html>

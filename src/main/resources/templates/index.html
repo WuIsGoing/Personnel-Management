@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理系统</title>
+    <script src="../static/easyui/jquery.min.js"></script>
+    <script src="../static/js/MyJS.js"></script>
+    <style type="text/css">
+        @import "static/css/bootstrap.css";
+        @import "static/css/signin.css";
+
+    </style>
+
+</head>
+<body>
+<div >
+    <form th:action="@{/login}" method="post" class="form-signin"   id="login">
+        <h2 class="form-signin-heading">管理系统登录</h2>
+        <div>
+            <br/>
+            <input name="ename" type="text" maxlength="28" id="ename" class="form-control" placeholder="请输入用户名"><br/>
+            <input type="password" name="password"size="28" class="form-control" placeholder="请输入密码"><br/>
+            <button  class="btn btn-lg  btn-primary btn-block" type="submit" >登录</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

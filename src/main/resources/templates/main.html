@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>员工管理系统</title>
+    <script src="/static/js/jquery-1.9.1.js"></script>
+    <script src="/static/js/bootstrap.js" crossorigin="anonymous"></script>
+    <script src="/static/js/MyJS.js"></script>
+    <!--<script src="/static/easyui/jquery.easyui.min.js"></script>-->
+    <style>
+        /*@import "/static/easyui/themes/default/easyui.css";*/
+        /*@import "/static/easyui/themes/icon.css";*/
+        @import "/static/css/bootstrap.css";
+        @import "static/css/dashboard.css";
+        li>a{color: grey;text-align: center;font-size: 15px;letter-spacing: 2px}
+        li>a:hover{color:#666666 }
+    </style>
+
+    <script>
+        $(function () {
+            //给列表赋予点击AJax跳转功能
+            $("#menu >li").each(function(){
+                $(this).on("click",function () {
+                    $("#mainContent").load($(this).attr("href"));
+                });
+            });
+            $("logout").on("click",function () {//退出登录
+                sessionStorage.clear() ;  //清除所有session值
+                window.location.reload();
+            })
+        })
+    </script>
+</head>
+<body >
+    <nav class="navbar  navbar-inverse navbar-fixed-top">
+        <div class="navbar-brand" style="font-size: 26px;font-weight: 400;letter-spacing: 4px">员工管理系统<br/></div>
+        <div style="float: right;color: white;line-height: 50px;margin-right: 100px;">
+            欢迎您，<span th:text="${session.employee.ename}"></span>
+            <a href="/" id="logout" style="color: white;margin-left: 30px;">退出登录</a>
+        </div>
+    </nav>
+    <div class="col-md-2 col-sm-2 col-xs-2 col-lg-1 sidebar ">
+        <ul class="nav nav-sidebar" th:each="menu:${session.employee.role.menus}"  id="menu">
+            <li th:href="@{${menu.href}}"><a th:text="${menu.action}"></a></li>
+        </ul>
+    </div>
+    <div class="col-sm-10 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="mainContent"></div>
+
+    <div style="height:60px;color: grey;text-align: center;padding: 30px;position: absolute;bottom: 0;width: 100%" class="mastfoot">
+        CopyRight @ 2019 WWY 版权所有
+    </div>
+</body>
+</html>

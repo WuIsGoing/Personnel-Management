@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工资管理</title>
+    <script>
+        $(function () {
+            $(".salaryChange").on("click",function () {//更改工资
+                var salary=prompt("要更改的工资为：");
+                if(!isNaN(salary)){
+                    $("#mainContent").load($(this).attr("href")+"&salary="+salary);
+                }else {
+                    alert("请输入数字！")
+                }
+            });
+
+            $(".salaryDelete").on("click",function () {//删除工资
+                var result=confirm("确定要删除？");
+                if(result){
+                    $("#mainContent").load($(this).attr("href"));
+                }
+            });
+            $("#salarySubmit").on("click",function () {//添加工资记录
+                $.ajax({
+                    method:"post",
+                    url:"/addSalary",
+                    data:JSON.stringify($("#addSalaryForm").serializeObject()),//使用封装好的将表单数据变成json格式字符串方法
+                    dataType:"JSON",
+                    contentType:"application/json;charset=UTF-8",
+                    success:function(result){
+                        if(result==1){//修改成功
+                            $("#mainContent").load("/salaryManage");
+                        }
+                        $("#addSalary").modal('hide');
+                    }
+                })
+            });
+        })
+    </script>
+</head>
+<body>
+<h3>工资管理</h3>
+<hr/>
+<table border="2px soild" class="table table-striped table-bordered">
+    <tr>
+        <th>序号</th><th>时间</th><th>金额</th><th>工号</th><th>员工</th><th>操作</th>
+    </tr>
+    <tr th:each="salary,var:${salaryList}">
+        <td th:text="${var.count}"></td>
+        <td th:text="${salary.time}"></td>
+        <td th:text="${salary.salary}"></td>
+        <td th:text="${salary.eid}"></td>
+        <td th:text="${salary.ename}"></td>
+        <td>
+            <button class="salaryChange btn btn-primary"  th:href="@{salaryChange(eid=${salary.eid})}">修改</button>
+            <button class="salaryDelete btn btn-danger" th:href="@{salaryDelete(eid=${salary.eid},time=${salary.time})}">删除</button>
+        </td>
+    </tr>
+</table>
+<button data-toggle="modal" data-target="#addSalary" class="btn btn-success">添加工资</button>
+<!-- 添加工资（Modal） -->
+<div class="modal" id="addSalary" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--添加工资记录-->
+            <form class="modal-body" id="addSalaryForm">
+                <br/>
+                员工姓名：<input  name="ename"><br/><br/>
+                工资：<input  name="salary"><br/>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="salarySubmit">添加</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>

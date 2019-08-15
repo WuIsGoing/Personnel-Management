@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>部门管理</title>
+    <script src="/static/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/zTree/js/jquery.ztree.all.js"></script>
+    <script src="/static/zTree/js/jquery.ztree.exedit.js"></script>
+    <style type="text/css">
+        /*@import "static/easyui/themes/default/easyui.css";*/
+        /*@import "static/easyui/themes/icon.css";*/
+        @import "/static/zTree/css/zTreeStyle/zTreeStyle.css";
+    </style>
+
+    <script>
+        $(function () {
+            var setting = {//ztree参数配置
+                async: {
+                    enable: true,
+                    url: "/showDepartment",
+                    autoParam:["id","name","pid"]
+                },
+                callback:{
+                    beforeRemove:function () {  //移出前确认
+                        return  confirm("你确定要删除该部门吗？");
+                    },
+                    onRemove:function (event, treeId, treeNode) {//移出后页面删除，不跳转
+                        $.get("/removeDepartment?id="+treeNode.id);
+                    },
+                    onRename:function(event, treeId, treeNode){//更名后回调操作数据库
+                        $.get("/changeDepartmentName?id="+treeNode.id+"&name="+treeNode.name);
+                    }
+                },
+                view:{
+                    selectedMulti:false
+                },
+                edit: {
+                    enable: true,
+                    removeTitle: "删除节点"
+                }
+            };
+            var zTreeObj = $.fn.zTree.init($("#department"), setting, null);//初始化ztree
+
+            $("#addDepartment").click(function () {//增加部门
+                var selectedNode = zTreeObj.getSelectedNodes()[0];//获得光标选中的节点
+                var newDepartment={"name":"新部门","pid":selectedNode.id};
+                //ajax添加部门并不跳转
+                $.ajax({
+                    url:"/addDepartment",
+                    type:"Post",//不能为method
+                    data:JSON.stringify(newDepartment),
+                    dataType:"JSON",
+                    contentType:"application/json;charset=UTF-8",
+                    success:function(result){
+                        if(result==1){//数据库添加成功，不跳转直接在此添加该节点
+                            newDepartment = zTreeObj.addNodes(selectedNode, newDepartment);
+                        }
+                    }
+                })
+            });
+
+        })
+    </script>
+
+</head>
+<body>
+<h3>部门管理</h3>
+<hr/>
+<ul  id="department" class="ztree"></ul>
+<button id="addDepartment" class="btn btn-success btn-sm">增加部门</button>
+</body>
+</html>

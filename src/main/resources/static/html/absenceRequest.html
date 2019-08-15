@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>请求请假</title>
+    <style>
+        #absenceRequest input{line-height:20px }
+    </style>
+    <script>
+        $(function () {
+
+            $("#submit").on("click",function () {//请假表单审核
+                if($("#startTime").val()<$("#endTime").val()){//开始时间不能大于结束时间
+                    $.ajax({
+                        method:"post",
+                        url:"/absenceRequest",
+                        data:JSON.stringify($("#absenceRequest").serializeObject()),//使用封装好的将表单数据变成json格式字符串方法
+                        dataType:"JSON",
+                        contentType:"application/json;charset=UTF-8",
+                        success:function(result){
+                            if(result==0) {
+                                // alert("已有申请，请勿重复申请!");
+                            }
+                            $("#mainContent").load("/showAbsence");
+                        }
+                    })
+                }else {
+                    alert("开始时间不能大于结束时间");
+                }
+            });
+
+            $("#return").on("click",function () {//返回请假管理
+                $("#mainContent").load("/showAbsence");
+            });
+
+
+        })
+    </script>
+</head>
+<body>
+    <form  id="absenceRequest" style="width: 400px;">
+        开始时间：<input type="date" name="startTime" id="startTime" class="form-control"><br/>
+        结束时间：<input type="date" name="endTime" id="endTime" class="form-control"><br/>
+        请假理由：<textarea  name="reason"  class="form-control" rows="4"></textarea><br/><br/>
+        <div><button id="submit" type="button" class="btn btn-primary " style="float: right;width: 100px">提交</button>
+
+            <button id="return" href="/showAbsence" type="button" class="btn btn-default" style="width: 80px">返回</button></div>
+    </form>
+
+
+</body>
+</html>

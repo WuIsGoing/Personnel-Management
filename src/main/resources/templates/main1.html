@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="/static/js/jquery-1.9.1.js"></script>
+    <script src="/static/js/bootstrap.js" crossorigin="anonymous"></script>
+    <script src="/static/js/MyJS.js"></script>
+    <!--<script src="/static/easyui/jquery.easyui.min.js"></script>-->
+    <style>
+        /*@import "/static/easyui/themes/default/easyui.css";*/
+        /*@import "/static/easyui/themes/icon.css";*/
+        @import "/static/css/bootstrap.css";
+        @import "static/css/dashboard.css";
+    </style>
+    <script>
+        $(function () {
+            //给列表赋予点击AJax跳转功能
+            $("#menu >li").each(function(){
+                $(this).on("click",function () {
+                    $("#mainContent").load($(this).attr("href"));
+                });
+            });
+        })
+    </script>
+</head>
+<body >
+    <div class="col-md-2  sidebar">
+        <ul class="nav nav-sidebar" th:each="menu:${session.employee.role.menus}">
+            <li><a th:text="${menu.action}" th:href="@{${menu.href}}">Reports</a></li>
+        </ul>
+    </div>
+    <div data-options="region:'north'" style="height:120px;">
+       <div><h2>员工管理系统</h2></div>
+        <div style="float: right;">欢迎您，<span th:text="${session.employee.ename}"></span></div>
+    </div>
+    <!--<div data-options="region:'west',title:'管理菜单'" style="width:200px;">-->
+        <ul th:each="menu:${session.employee.role.menus}" id="menu" class="nav nav-pills nav-stacked">
+            <li th:text="${menu.action}" th:href="@{${menu.href}}"></li>
+        </ul>
+    <!--</div>-->
+    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;" id="mainContent"></div>
+    <div data-options="region:'south'" style="height:60px;color: grey;text-align: center">
+        CopyRight @ 2019 WWY 版权所有
+    </div>
+</body>
+</html>

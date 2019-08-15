@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/myrbac?serverTimezone=GMT%2B8
+    username: root
+    password: root
+    #数据库连接池
+    type: com.alibaba.druid.pool.DruidDataSource
+  #devtools热部署
+  devtools:
+    livereload:
+      enabled: true
+      port: 35729
+    restart:
+      enabled: true
+  freemarker:
+    cache: false
+  #jpa
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+  #默认静态资源配置pattern:"/**"  location:"classpath:/static/"
+  mvc:
+    static-path-pattern: "/static/**"
+  resources:
+    static-locations: "classpath:/static/"
+
+#mybatis别名
+mybatis:
+  type-aliases-package: com.wwy.pojo
+#sql语句信息
+logging:
+  level:
+    com.wwy.mapper: trace
+#    org:
+#      springframework:
+#        web: trace
+#      apache: trace
+
